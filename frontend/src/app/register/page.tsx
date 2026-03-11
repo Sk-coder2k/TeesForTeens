@@ -1,0 +1,167 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/context/ToastContext";
+import { GoogleLogin } from "@react-oauth/google";
+
+export default function RegisterPage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [error, setError] = useState("");
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+
+  const { register: registerAuth, loginWithGoogle } = useAuth();
+  const router = useRouter();
+  const { success } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (name && email && password) {
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters long.");
+        return;
+      }
+      
+      setIsRegisterLoading(true);
+      const res = await registerAuth(name, email, password);
+      setIsRegisterLoading(false);
+      
+      if (res.success) {
+        success("Account created and successfully logged in!");
+        router.push("/");
+      } else {
+        setError(res.message || "Registration failed.");
+      }
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    if (credentialResponse.credential) {
+      setIsGoogleLoading(true);
+      setError("");
+      const res = await loginWithGoogle(credentialResponse.credential);
+      setIsGoogleLoading(false);
+      if (res.success) {
+        success("Signed up and successfully logged in with Google!");
+        router.push("/");
+      } else {
+        setError(res.message || "Google signup failed.");
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-mint-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-[url('https://images.unsplash.com/photo-1542282088-fe8426682b8f?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center">
+      <div className="absolute inset-0 bg-white/40 backdrop-blur-sm" />
+      
+      <div className="relative sm:mx-auto sm:w-full sm:max-w-md z-10">
+        <Link href="/" className="inline-flex items-center text-gray-900 hover:text-mint-700 mb-6 font-bold transition-colors bg-white/50 px-4 py-2 rounded-full backdrop-blur-md">
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
+        </Link>
+        <div className="bg-white/90 backdrop-blur-md py-10 px-6 shadow-2xl rounded-3xl sm:px-10 border border-white/50">
+          
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Create Account</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Join the TeesforTeens community
+            </p>
+          </div>
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && <div className="p-3 bg-red-50 text-red-600 text-sm font-bold rounded-lg border border-red-100">{error}</div>}
+            
+            <div>
+              <label className="block text-sm font-bold text-gray-900 mb-1">Full Name</label>
+              <div className="mt-1">
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="appearance-none block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mint-500 focus:border-mint-500 sm:text-sm transition-colors text-black"
+                  placeholder="Rahul Sharma"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-900 mb-1">Email address</label>
+              <div className="mt-1">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="appearance-none block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mint-500 focus:border-mint-500 sm:text-sm transition-colors text-black"
+                  placeholder="name@example.com"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-900 mb-1">Password</label>
+              <div className="mt-1">
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="appearance-none block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mint-500 focus:border-mint-500 sm:text-sm transition-colors text-black"
+                  placeholder="••••••••"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-2">Must be at least 8 characters long</p>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                disabled={isRegisterLoading || isGoogleLoading}
+                className="w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white bg-mint-600 hover:bg-mint-500 transition-all hover-lift disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isRegisterLoading ? "Creating Account..." : "Create Account"}
+              </button>
+            </div>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <div className="flex justify-center flex-col items-center gap-2">
+              {isGoogleLoading && <span className="text-sm font-bold text-gray-500 mb-2">Connecting to Google... <div className="inline-block relative top-1 w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin ml-2" /></span>}
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setError("Google widget initialization failed")}
+                useOneTap
+                theme="outline"
+                shape="rectangular"
+                width="100%"
+                text="signup_with"
+              />
+            </div>
+          </form>
+
+          <div className="mt-8 text-center text-sm">
+            <span className="text-gray-600">Already have an account? </span>
+            <Link href="/login" className="font-bold text-mint-600 hover:text-mint-500 transition-colors">
+              Sign in instead
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
