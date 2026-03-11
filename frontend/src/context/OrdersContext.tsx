@@ -50,7 +50,7 @@ export function OrdersProvider({ children }: { children: React.ReactNode }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const API_URL = "http://localhost:5001/api/orders";
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api"}/orders`;
 
   const getAuthHeaders = (): Record<string, string> => {
     const headers: Record<string, string> = { "Content-Type": "application/json" };

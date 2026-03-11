@@ -44,7 +44,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/reviews/product/${slug}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api"}/reviews/product/${slug}`);
         if (res.ok) {
           const data = await res.json();
           setReviews(data);

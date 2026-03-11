@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Refresh role from backend before declaring auth ready
     if (parsed.token) {
-      fetch("http://localhost:5001/api/users/profile", {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api"}/users/profile`, {
         headers: { Authorization: `Bearer ${parsed.token}`, "Content-Type": "application/json" }
       })
         .then(r => r.ok ? r.json() : null)
@@ -69,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const API_URL = "http://localhost:5001/api/auth";
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api"}/auth`;
 
   const register = async (name: string, email: string, password?: string): Promise<AuthResponse> => {
     try {

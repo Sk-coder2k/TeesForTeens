@@ -36,7 +36,7 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const API_URL = "http://localhost:5001/api/products";
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api"}/products`;
 
   const getAuthHeaders = (): Record<string, string> => {
     const headers: Record<string, string> = { "Content-Type": "application/json" };

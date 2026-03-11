@@ -29,7 +29,7 @@ export function CouponsProvider({ children }: { children: ReactNode }) {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const API_URL = "http://localhost:5001/api/coupons";
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api"}/coupons`;
 
   const getAuthHeaders = (): Record<string, string> => {
     const headers: Record<string, string> = { "Content-Type": "application/json" };

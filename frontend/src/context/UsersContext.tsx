@@ -24,7 +24,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const API_URL = "http://localhost:5001/api/users";
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api"}/users`;
 
   const getAuthHeaders = (): Record<string, string> => {
     const headers: Record<string, string> = { "Content-Type": "application/json" };
