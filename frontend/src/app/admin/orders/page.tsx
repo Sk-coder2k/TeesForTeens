@@ -5,7 +5,7 @@ import { Search, Eye, MoreVertical, X, Trash2, Edit } from "lucide-react";
 import { useOrders, Order } from "@/context/OrdersContext";
 
 export default function AdminOrdersPage() {
-  const { orders, isLoading, updateOrderStatus } = useOrders();
+  const { orders, isLoading, updateOrderStatus, deleteOrder } = useOrders();
   
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Status");
@@ -199,6 +199,17 @@ export default function AdminOrdersPage() {
                                 <X size={14} /> Cancel Order
                               </button>
                             )}
+                            <button 
+                              onClick={() => { 
+                                if (confirm('Delete this order permanently?')) {
+                                  deleteOrder(order.id); 
+                                  setActiveDropdown(null); 
+                                }
+                              }}
+                              className="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 flex items-center gap-2 font-bold border-t border-gray-100 mt-1"
+                            >
+                              🗑️ Delete Order
+                            </button>
                           </div>
                         )}
                       </div>

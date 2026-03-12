@@ -42,6 +42,7 @@ interface OrdersContextType {
   refreshOrders: () => Promise<void>;
   addOrder: (order: Order) => Promise<void>;
   updateOrderStatus: (id: string, newStatus: string) => Promise<void>;
+  deleteOrder: (id: string) => Promise<void>;
 }
 
 const OrdersContext = createContext<OrdersContextType | undefined>(undefined);
@@ -181,8 +182,18 @@ export function OrdersProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const deleteOrder = async (id: string) => {
+    try {
+      const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api"}/orders/${id}`;
+      await fetch(API_URL, { method: "DELETE", headers: getAuthHeaders() });
+      setOrders((prev) => prev.filter((o) => o.id !== id));
+    } catch (err) {
+      console.error("Delete Order Error:", err);
+    }
+  };
+
   return (
-    <OrdersContext.Provider value={{ orders, isLoading, refreshOrders: fetchOrders, addOrder, updateOrderStatus }}>
+    <OrdersContext.Provider value={{ orders, isLoading, refreshOrders: fetchOrders, addOrder, updateOrderStatus, deleteOrder }}>
       {children}
     </OrdersContext.Provider>
   );
