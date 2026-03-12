@@ -29,11 +29,11 @@ export default function RegisterPage() {
         setError("Password must be at least 8 characters long.");
         return;
       }
-
+      
       setIsRegisterLoading(true);
       const res = await registerAuth(name, email, password);
       setIsRegisterLoading(false);
-
+      
       if (res.success) {
         success("Account created and successfully logged in!");
         router.push("/");
@@ -59,41 +59,27 @@ export default function RegisterPage() {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(135deg, #0a1612 0%, #112318 40%, #1a3d2b 75%, #29bc89 150%)",
-      }}
-    >
+    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a1612 0%, #112318 40%, #1a3d2b 75%, #29bc89 150%)" }}>
+      
+      
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md z-10">
-        <Link
-          href="/"
-          className="inline-flex items-center text-white/80 hover:text-white mb-6 font-bold transition-colors bg-white/10 hover:bg-white/15 px-4 py-2 rounded-full backdrop-blur-md border border-white/10"
-        >
+        <Link href="/" className="inline-flex items-center text-white/80 hover:text-white mb-6 font-bold transition-colors bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full border border-white/20 backdrop-blur-md">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
         </Link>
         <div className="bg-white/90 backdrop-blur-md py-10 px-6 shadow-2xl rounded-3xl sm:px-10 border border-white/50">
+          
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-              Create Account
-            </h2>
+            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Create Account</h2>
             <p className="mt-2 text-sm text-gray-600">
               Join the TeesforTeens community
             </p>
           </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="p-3 bg-red-50 text-red-600 text-sm font-bold rounded-lg border border-red-100">
-                {error}
-              </div>
-            )}
-
+            {error && <div className="p-3 bg-red-50 text-red-600 text-sm font-bold rounded-lg border border-red-100">{error}</div>}
+            
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-1">
-                Full Name
-              </label>
+              <label className="block text-sm font-bold text-gray-900 mb-1">Full Name</label>
               <div className="mt-1">
                 <input
                   type="text"
@@ -107,9 +93,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-1">
-                Email address
-              </label>
+              <label className="block text-sm font-bold text-gray-900 mb-1">Email address</label>
               <div className="mt-1">
                 <input
                   type="email"
@@ -123,9 +107,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-1">
-                Password
-              </label>
+              <label className="block text-sm font-bold text-gray-900 mb-1">Password</label>
               <div className="mt-1">
                 <input
                   type="password"
@@ -136,9 +118,7 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-2">
-                Must be at least 8 characters long
-              </p>
+              <p className="text-xs text-gray-500 mt-2">Must be at least 8 characters long</p>
             </div>
 
             <div>
@@ -156,19 +136,12 @@ export default function RegisterPage() {
                 <div className="w-full border-t border-gray-200" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Or continue with
-                </span>
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
               </div>
             </div>
 
             <div className="flex justify-center flex-col items-center gap-2">
-              {isGoogleLoading && (
-                <span className="text-sm font-bold text-gray-500 mb-2">
-                  Connecting to Google...{" "}
-                  <div className="inline-block relative top-1 w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin ml-2" />
-                </span>
-              )}
+              {isGoogleLoading && <span className="text-sm font-bold text-gray-500 mb-2">Connecting to Google... <div className="inline-block relative top-1 w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin ml-2" /></span>}
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => setError("Google widget initialization failed")}
@@ -183,10 +156,7 @@ export default function RegisterPage() {
 
           <div className="mt-8 text-center text-sm">
             <span className="text-gray-600">Already have an account? </span>
-            <Link
-              href="/login"
-              className="font-bold text-mint-600 hover:text-mint-500 transition-colors"
-            >
+            <Link href="/login" className="font-bold text-mint-600 hover:text-mint-500 transition-colors">
               Sign in instead
             </Link>
           </div>

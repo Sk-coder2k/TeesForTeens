@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthReady, setIsAuthReady] = useState(false);
   const router = useRouter();
 
-  // Load auth state from localStorage + refresh role from backend
+  // Load auth state from localStorage immediately, refresh from backend silently
   useEffect(() => {
     const storedUser = localStorage.getItem("teesforteens_user");
     if (!storedUser) {
@@ -45,11 +45,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const parsed = JSON.parse(storedUser);
-    // Set from localStorage immediately so UI isn't blank
+    // Set from localStorage immediately AND mark auth ready — no waiting for backend
     const localUser = { ...parsed, isAdmin: parsed.role === 'admin' };
     setUser(localUser);
+    setIsAuthReady(true); // Ready immediately from localStorage
 
-    // Refresh role from backend before declaring auth ready
+    // Silently refresh role from backend in background (no blocking)
     if (parsed.token) {
       fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api"}/users/profile`, {
         headers: { Authorization: `Bearer ${parsed.token}`, "Content-Type": "application/json" }
@@ -62,10 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             localStorage.setItem("teesforteens_user", JSON.stringify(refreshed));
           }
         })
-        .catch(() => {})
-        .finally(() => setIsAuthReady(true));
-    } else {
-      setIsAuthReady(true);
+        .catch(() => {}); // Silent fail — user stays logged in from localStorage
     }
   }, []);
 
