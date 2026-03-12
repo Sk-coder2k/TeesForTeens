@@ -165,17 +165,18 @@ const sendOrderStatusEmail = async (
 export const getDashboardStats = async (req, res) => {
   try {
     const [orders, products, users] = await Promise.all([
-      Order.find({ deletedByAdmin: { $ne: true } }).select(
-        "totalPrice createdAt orderStatus orderItems",
+      Order.find({}).select(
+        "totalPrice createdAt orderStatus orderItems deletedByAdmin",
       ),
       Product.countDocuments(),
       User.countDocuments({ role: "customer" }),
     ]);
-    const totalRevenue = orders.reduce(
+    const activeOrders = orders.filter((o) => !o.deletedByAdmin);
+    const totalRevenue = activeOrders.reduce(
       (sum, o) => sum + (o.totalPrice || 0),
       0,
     );
-    const recentOrders = await Order.find({})
+    const recentOrders = await Order.find({ deletedByAdmin: { $ne: true } })
       .sort({ createdAt: -1 })
       .limit(5)
       .populate("user", "name");
@@ -216,7 +217,7 @@ export const getDashboardStats = async (req, res) => {
       });
       monthlyData[key] = { revenue: 0, orders: 0, customers: 0 };
     }
-    orders.forEach((o) => {
+    activeOrders.forEach((o) => {
       const d = new Date(o.createdAt);
       const key = d.toLocaleString("en-IN", {
         month: "short",
@@ -242,7 +243,7 @@ export const getDashboardStats = async (req, res) => {
 
     res.json({
       totalRevenue,
-      totalOrders: orders.length,
+      totalOrders: activeOrders.length,
       totalProducts: products,
       totalCustomers: users,
       monthlyChartData,
