@@ -147,6 +147,9 @@ export default function AdminLayout({
         <div className="h-16 flex items-center px-4 border-b border-gray-200 justify-between">
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt="TeesforTeens" className="h-8 w-auto" />
+            <span className="font-bold text-sm text-gray-400 tracking-widest uppercase">
+              Admin
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <a
