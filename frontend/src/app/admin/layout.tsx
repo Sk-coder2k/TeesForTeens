@@ -144,16 +144,16 @@ export default function AdminLayout({
       <div
         className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 text-gray-900 flex-shrink-0 flex flex-col transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
       >
-        <div className="h-16 flex items-center px-6 border-b border-gray-200 justify-between">
-          <span className="font-bold text-xl tracking-tighter text-[#29bc89]">
-            TeesforTeens Admin.
-          </span>
+        <div className="h-16 flex items-center px-4 border-b border-gray-200 justify-between">
+          <div className="flex items-center gap-2">
+            <img src="/logo.svg" alt="TeesforTeens" className="h-8 w-auto" />
+          </div>
           <div className="flex items-center gap-2">
             <a
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs font-semibold text-gray-400 hover:text-[#29bc89] transition-colors"
+              className="flex items-center gap-1.5 text-xs font-bold text-white bg-[#29bc89] hover:bg-[#23a172] px-3 py-1.5 rounded-full transition-colors shadow-sm"
             >
               View Store ↗
             </a>
@@ -211,9 +211,10 @@ export default function AdminLayout({
             >
               <Menu size={22} />
             </button>
-            <div className="lg:hidden font-bold text-[#29bc89] text-sm">
-              Admin Panel
-            </div>
+          </div>
+          {/* Centered Admin Panel title */}
+          <div className="absolute left-1/2 -translate-x-1/2 lg:hidden">
+            <img src="/logo.svg" alt="TeesforTeens" className="h-7 w-auto" />
           </div>
           <div className="flex items-center gap-3 sm:gap-4 ml-auto">
             {/* Bell */}
