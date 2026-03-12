@@ -4,13 +4,26 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard, ShoppingBag, ShoppingCart, Users, Tag,
-  LogOut, Bell, X, AlertCircle, LayoutGrid, Menu,
+  LayoutDashboard,
+  ShoppingBag,
+  ShoppingCart,
+  Users,
+  Tag,
+  LogOut,
+  Bell,
+  X,
+  AlertCircle,
+  LayoutGrid,
+  Menu,
 } from "lucide-react";
 import { useOrders } from "@/context/OrdersContext";
 import { useAuth } from "@/context/AuthContext";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAuthenticated, isAuthReady, logout } = useAuth();
@@ -35,7 +48,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (saved) setClearedNotifs(JSON.parse(saved));
 
     function handleClickOutside(event: MouseEvent) {
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+      if (
+        notifRef.current &&
+        !notifRef.current.contains(event.target as Node)
+      ) {
         setIsNotifOpen(false);
       }
     }
@@ -44,7 +60,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, []);
 
   const actionableOrders = orders.filter(
-    (o) => (o.status === "Pending" || o.status === "Cancelled") && !clearedNotifs.includes(o.id),
+    (o) =>
+      (o.status === "Pending" || o.status === "Cancelled") &&
+      !clearedNotifs.includes(o.id),
   );
   const actionRequiredCount = actionableOrders.length;
 
@@ -52,7 +70,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     e.stopPropagation();
     setClearedNotifs((prev) => {
       const updated = [...prev, id];
-      localStorage.setItem("teesforteens_cleared_notifs", JSON.stringify(updated));
+      localStorage.setItem(
+        "teesforteens_cleared_notifs",
+        JSON.stringify(updated),
+      );
       return updated;
     });
   };
@@ -61,7 +82,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const allIds = actionableOrders.map((o) => o.id);
     setClearedNotifs((prev) => {
       const updated = [...prev, ...allIds];
-      localStorage.setItem("teesforteens_cleared_notifs", JSON.stringify(updated));
+      localStorage.setItem(
+        "teesforteens_cleared_notifs",
+        JSON.stringify(updated),
+      );
       return updated;
     });
     setIsNotifOpen(false);
@@ -69,20 +93,38 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const NAV_LINKS = [
     { title: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },
-    { title: "Products", href: "/admin/products", icon: <ShoppingCart size={20} /> },
-    { title: "Orders", href: "/admin/orders", icon: <ShoppingBag size={20} />, badge: actionRequiredCount > 0 ? actionRequiredCount : null },
+    {
+      title: "Products",
+      href: "/admin/products",
+      icon: <ShoppingCart size={20} />,
+    },
+    {
+      title: "Orders",
+      href: "/admin/orders",
+      icon: <ShoppingBag size={20} />,
+      badge: actionRequiredCount > 0 ? actionRequiredCount : null,
+    },
     { title: "Customers", href: "/admin/users", icon: <Users size={20} /> },
     { title: "Coupons", href: "/admin/coupons", icon: <Tag size={20} /> },
-    { title: "Homepage Manager", href: "/admin/homepage", icon: <LayoutGrid size={20} /> },
+    {
+      title: "Homepage Manager",
+      href: "/admin/homepage",
+      icon: <LayoutGrid size={20} />,
+    },
   ];
 
   // Auth guard — only block if we're on an admin route and not verified yet
-  if (pathname.startsWith("/admin") && (!isAuthReady || !isAuthenticated || !user?.isAdmin)) {
+  if (
+    pathname.startsWith("/admin") &&
+    (!isAuthReady || !isAuthenticated || !user?.isAdmin)
+  ) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-gray-500 text-sm font-medium">Verifying access...</p>
+          <p className="text-gray-500 text-sm font-medium">
+            Verifying access...
+          </p>
         </div>
       </div>
     );
@@ -90,7 +132,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-gray-100 flex overflow-hidden">
-
       {/* Mobile overlay */}
       {isSidebarOpen && (
         <div
@@ -100,7 +141,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       )}
 
       {/* Sidebar */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 text-gray-900 flex-shrink-0 flex flex-col transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
+      <div
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 text-gray-900 flex-shrink-0 flex flex-col transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+      >
         <div className="h-16 flex items-center px-6 border-b border-gray-200 justify-between">
           <span className="font-bold text-xl tracking-tighter text-[#29bc89]">
             TeesforTeens Admin.
@@ -131,10 +174,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={link.href}
                 onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center justify-between px-4 py-3 rounded-xl transition-colors font-medium ${
-                  isActive ? "bg-mint-100 text-mint-800" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  isActive
+                    ? "bg-mint-100 text-mint-800"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
-                <div className="flex items-center gap-3">{link.icon} {link.title}</div>
+                <div className="flex items-center gap-3">
+                  {link.icon} {link.title}
+                </div>
                 {link.badge && (
                   <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                     {link.badge}
@@ -157,15 +204,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-6">
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="lg:hidden p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <Menu size={22} />
-          </button>
-          <div className="lg:hidden font-bold text-[#29bc89] text-sm">Admin Panel</div>
-          <div className="flex items-center gap-4 sm:gap-6">
-
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <Menu size={22} />
+            </button>
+            <div className="lg:hidden font-bold text-[#29bc89] text-sm">
+              Admin Panel
+            </div>
+          </div>
+          <div className="flex items-center gap-3 sm:gap-4 ml-auto">
             {/* Bell */}
             <div ref={notifRef} className="relative">
               <button
@@ -183,9 +233,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               {isNotifOpen && (
                 <div className="absolute right-0 top-12 w-80 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100">
-                    <h3 className="font-bold text-gray-900 text-sm">Notifications</h3>
+                    <h3 className="font-bold text-gray-900 text-sm">
+                      Notifications
+                    </h3>
                     {actionableOrders.length > 0 && (
-                      <button onClick={clearAllNotifications} className="text-xs font-semibold text-mint-600 hover:text-mint-700">
+                      <button
+                        onClick={clearAllNotifications}
+                        className="text-xs font-semibold text-mint-600 hover:text-mint-700"
+                      >
                         Clear all
                       </button>
                     )}
@@ -198,9 +253,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     ) : (
                       <div className="divide-y divide-gray-100">
                         {actionableOrders.map((order) => (
-                          <div key={order.id} className="p-4 hover:bg-gray-50 transition-colors flex gap-3 relative group">
+                          <div
+                            key={order.id}
+                            className="p-4 hover:bg-gray-50 transition-colors flex gap-3 relative group"
+                          >
                             <div className="flex-shrink-0 mt-0.5">
-                              <AlertCircle className={`w-5 h-5 ${order.status === "Cancelled" ? "text-red-500" : "text-yellow-500"}`} />
+                              <AlertCircle
+                                className={`w-5 h-5 ${order.status === "Cancelled" ? "text-red-500" : "text-yellow-500"}`}
+                              />
                             </div>
                             <div className="flex-1 min-w-0 pr-6">
                               <p className="text-sm font-medium text-gray-900 mb-0.5 truncate">
@@ -211,7 +271,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                   ? `${order.customer} cancelled. Refund required.`
                                   : `New order from ${order.customer}. Ready to fulfill.`}
                               </p>
-                              <p className="text-[10px] font-bold text-gray-400 mt-1">{order.date}</p>
+                              <p className="text-[10px] font-bold text-gray-400 mt-1">
+                                {order.date}
+                              </p>
                             </div>
                             <button
                               onClick={(e) => clearNotification(order.id, e)}
@@ -243,7 +305,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className="w-8 h-8 rounded-full bg-mint-200 flex items-center justify-center font-bold text-mint-800 text-sm">
                 {user?.name?.charAt(0).toUpperCase() || "A"}
               </div>
-              <span className="font-medium text-sm hidden sm:block text-gray-900">{user?.name || "Admin"}</span>
+              <span className="font-medium text-sm hidden xl:block text-gray-900">
+                {user?.name || "Admin"}
+              </span>
             </div>
           </div>
         </header>
