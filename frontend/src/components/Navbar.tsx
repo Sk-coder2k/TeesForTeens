@@ -145,7 +145,7 @@ export default function Navbar() {
               <div className="relative hidden sm:block" ref={profileRef}>
                 <button
                   onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-gray-800 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors border border-gray-200"
+                  className="flex items-center gap-2 md:px-3 lg:px-4 py-2 text-sm font-bold text-gray-800 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors border border-gray-200"
                 >
                   {user?.image ? (
                     <img
@@ -158,7 +158,7 @@ export default function Navbar() {
                       {user?.name?.charAt(0) || "U"}
                     </div>
                   )}
-                  <span>{user?.name}</span>
+                  <span className="hidden lg:inline">{user?.name}</span>
                 </button>
 
                 {isProfileMenuOpen && (
