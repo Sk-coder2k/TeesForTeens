@@ -144,29 +144,29 @@ export default function AdminLayout({
       <div
         className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 text-gray-900 flex-shrink-0 flex flex-col transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
       >
-        <div className="h-16 flex items-center px-4 border-b border-gray-200 justify-between">
-          <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt="TeesforTeens" className="h-8 w-auto" />
-            <span className="font-bold text-sm text-gray-400 tracking-widest uppercase">
-              Admin
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <a
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs font-bold text-white bg-[#29bc89] hover:bg-[#23a172] px-3 py-1.5 rounded-full transition-colors shadow-sm"
-            >
-              View Store ↗
-            </a>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="lg:hidden p-1 text-gray-400 hover:text-gray-900"
-            >
-              <X size={18} />
-            </button>
-          </div>
+        <div className="h-16 flex items-center px-4 border-b border-gray-200 justify-between gap-2">
+          <img
+            src="/logo.svg"
+            alt="TeesforTeens"
+            className="h-6 w-auto shrink-0"
+          />
+          <span className="font-bold text-xs text-gray-500 tracking-widest uppercase shrink-0">
+            Admin
+          </span>
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto flex items-center gap-1 text-xs font-bold text-white bg-[#29bc89] hover:bg-[#23a172] px-2.5 py-1.5 rounded-full transition-colors shrink-0"
+          >
+            View Store ↗
+          </a>
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="lg:hidden p-1 text-gray-400 hover:text-gray-900 shrink-0"
+          >
+            <X size={18} />
+          </button>
         </div>
         <div className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
           {NAV_LINKS.map((link) => {
