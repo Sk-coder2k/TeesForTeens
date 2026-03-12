@@ -165,7 +165,9 @@ const sendOrderStatusEmail = async (
 export const getDashboardStats = async (req, res) => {
   try {
     const [orders, products, users] = await Promise.all([
-      Order.find({}).select("totalPrice createdAt orderStatus orderItems"),
+      Order.find({ deletedByAdmin: { $ne: true } }).select(
+        "totalPrice createdAt orderStatus orderItems",
+      ),
       Product.countDocuments(),
       User.countDocuments({ role: "customer" }),
     ]);
@@ -307,7 +309,7 @@ export const getOrderById = async (req, res) => {
 // @desc    Get all orders
 export const getOrders = async (req, res) => {
   try {
-    const orders = await Order.find({})
+    const orders = await Order.find({ deletedByAdmin: { $ne: true } })
       .sort({ createdAt: -1 })
       .populate("user", "id name email phone");
     res.json(orders);
@@ -363,8 +365,9 @@ export const deleteOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: "Order not found" });
-    await order.deleteOne();
-    res.json({ message: "Order deleted successfully" });
+    order.deletedByAdmin = true;
+    await order.save();
+    res.json({ message: "Order hidden from admin successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

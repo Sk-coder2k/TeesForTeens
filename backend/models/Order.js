@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User',
+      ref: "User",
     },
     orderItems: [
       {
@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema(
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
-          ref: 'Product',
+          ref: "Product",
         },
       },
     ],
@@ -35,7 +35,7 @@ const orderSchema = new mongoose.Schema(
     paymentMethod: {
       type: String,
       required: true,
-      enum: ['UPI', 'Card', 'COD'],
+      enum: ["UPI", "Card", "COD"],
     },
     paymentResult: {
       id: { type: String },
@@ -82,33 +82,41 @@ const orderSchema = new mongoose.Schema(
     orderStatus: {
       type: String,
       required: true,
-      enum: ['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered', 'Cancelled'],
-      default: 'Pending',
+      enum: [
+        "Pending",
+        "Confirmed",
+        "Packed",
+        "Shipped",
+        "Delivered",
+        "Cancelled",
+      ],
+      default: "Pending",
     },
+    deletedByAdmin: { type: Boolean, default: false },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Auto-generate a short unique display ID before saving
-orderSchema.pre('validate', async function () {
+orderSchema.pre("validate", async function () {
   if (!this.displayId) {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // No I/1/O/0 to avoid confusion
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // No I/1/O/0 to avoid confusion
     let id;
     let exists = true;
     while (exists) {
-      id = 'TFT-';
+      id = "TFT-";
       for (let i = 0; i < 6; i++) {
         id += chars.charAt(Math.floor(Math.random() * chars.length));
       }
-      const found = await mongoose.model('Order').findOne({ displayId: id });
+      const found = await mongoose.model("Order").findOne({ displayId: id });
       exists = !!found;
     }
     this.displayId = id;
   }
 });
 
-const Order = mongoose.model('Order', orderSchema);
+const Order = mongoose.model("Order", orderSchema);
 
 export default Order;
