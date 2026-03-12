@@ -58,10 +58,29 @@ export const chat = async (req, res) => {
     }
 
     // Build Gemini conversation format
-    const geminiMessages = messages.map((m) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }],
-    }));
+    // Filter out the initial assistant greeting (Gemini requires conversation to start with user)
+    const filteredMessages = messages.filter(
+      (m) => m.role === "user" || messages.indexOf(m) > 0,
+    );
+    const geminiMessages = filteredMessages
+      .filter(
+        (m) => !(m.role === "assistant" && filteredMessages.indexOf(m) === 0),
+      )
+      .map((m) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }],
+      }));
+
+    // Gemini needs at least one user message and must start with user
+    const validMessages = [];
+    let hasUser = false;
+    for (const m of geminiMessages) {
+      if (m.role === "user") hasUser = true;
+      if (hasUser) validMessages.push(m);
+    }
+    if (validMessages.length === 0) {
+      return res.status(400).json({ message: "No user message found" });
+    }
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
@@ -72,7 +91,7 @@ export const chat = async (req, res) => {
           system_instruction: {
             parts: [{ text: SYSTEM_PROMPT + productContext }],
           },
-          contents: geminiMessages,
+          contents: validMessages,
           generationConfig: {
             maxOutputTokens: 400,
             temperature: 0.7,
