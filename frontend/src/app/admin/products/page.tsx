@@ -653,6 +653,34 @@ export default function AdminProductsPage() {
                     <option key={cat}>{cat}</option>
                   ))}
                 </select>
+                {/* Custom categories with delete */}
+                {customCategories.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {customCategories.map((cat) => (
+                      <span
+                        key={cat}
+                        className="flex items-center gap-1 px-2 py-1 bg-mint-50 border border-mint-200 rounded-lg text-xs font-bold text-mint-700"
+                      >
+                        {cat}
+                        <button
+                          onClick={() => {
+                            setCustomCategories((prev) =>
+                              prev.filter((c) => c !== cat),
+                            );
+                            if (newProduct.category === cat)
+                              setNewProduct((p) => ({
+                                ...p,
+                                category: "Oversized",
+                              }));
+                          }}
+                          className="text-mint-400 hover:text-red-500 transition-colors"
+                        >
+                          <X size={10} strokeWidth={3} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="flex gap-2 mt-2">
                   <input
                     type="text"
@@ -840,11 +868,8 @@ export default function AdminProductsPage() {
                     </span>
                     <div className="space-y-2 mb-3">
                       {newProduct.colors.map((color) => (
-                        <div
-                          key={color}
-                          className="flex items-center gap-2 group relative pr-4"
-                        >
-                          <label className="text-xs font-bold text-gray-500 w-10 text-right truncate">
+                        <div key={color} className="flex items-center gap-1">
+                          <label className="text-xs font-bold text-gray-500 w-10 shrink-0 truncate">
                             {color}
                           </label>
                           <input
@@ -877,7 +902,7 @@ export default function AdminProductsPage() {
                                 };
                               });
                             }}
-                            className="absolute right-0 p-1 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity bg-white rounded-full shadow-sm border border-gray-100"
+                            className="p-1 text-gray-300 hover:text-red-500 transition-colors shrink-0"
                             title="Remove Color"
                           >
                             <X size={12} strokeWidth={3} />
