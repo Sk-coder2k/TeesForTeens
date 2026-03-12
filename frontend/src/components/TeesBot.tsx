@@ -23,7 +23,8 @@ export default function TeesBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hey! 👋 I'm TeesBot — your style guide at TeesforTeens! Ask me anything about our products, orders, or delivery 🔥",
+      content:
+        "Hey! 👋 I'm TeesBot — your style guide at TeesforTeens! Ask me anything about our products, orders, or delivery 🔥",
     },
   ]);
   const [input, setInput] = useState("");
@@ -34,6 +35,15 @@ export default function TeesBot() {
 
   useEffect(() => {
     const timer = setTimeout(() => setShowBubble(true), 3000);
+    // Ping backend to wake it up (Render free tier spins down)
+    fetch(`${API_URL}/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: [{ role: "user", content: "ping" }],
+        includeProducts: false,
+      }),
+    }).catch(() => {});
     return () => clearTimeout(timer);
   }, []);
 
@@ -50,23 +60,87 @@ export default function TeesBot() {
 
     setInput("");
     setShowBubble(false);
-    const newMessages: Message[] = [...messages, { role: "user", content: userText }];
+    const newMessages: Message[] = [
+      ...messages,
+      { role: "user", content: userText },
+    ];
     setMessages(newMessages);
     setIsLoading(true);
 
     try {
+      // Show waking up message if backend is slow (Render free tier)
+      const wakeTimer = setTimeout(() => {
+        setMessages((prev) => {
+          const last = prev[prev.length - 1];
+          if (last?.role === "user") {
+            return [
+              ...prev,
+              {
+                role: "assistant",
+                content:
+                  "⏳ Waking up the server... this takes ~15 seconds on first message. Hold on!",
+              },
+            ];
+          }
+          return prev;
+        });
+      }, 5000);
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 60000);
+
       const res = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
+          messages: newMessages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
           includeProducts: true,
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(wakeTimer);
+      clearTimeout(timeout);
+
+      // Remove waking up message if it was added
+      setMessages((prev) =>
+        prev.filter((m) => !m.content.includes("Waking up the server")),
+      );
+
       const data = await res.json();
-      setMessages((prev) => [...prev, { role: "assistant", content: data.reply || "Oops, something went wrong 😅" }]);
-    } catch {
-      setMessages((prev) => [...prev, { role: "assistant", content: "I'm having trouble connecting right now. Try again in a moment! 🙏" }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: data.reply || "Oops, something went wrong 😅",
+        },
+      ]);
+    } catch (err: any) {
+      setMessages((prev) =>
+        prev.filter((m) => !m.content.includes("Waking up the server")),
+      );
+      if (err?.name === "AbortError") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content:
+              "The server took too long to respond 😅 Please try again in a moment!",
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content:
+              "I'm having trouble connecting right now. Try again in a moment! 🙏",
+          },
+        ]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -101,13 +175,19 @@ export default function TeesBot() {
             </div>
             <div className="flex items-center gap-1">
               <button
-                onClick={(e) => { e.stopPropagation(); setIsMinimized(!isMinimized); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMinimized(!isMinimized);
+                }}
                 className="p-1.5 hover:bg-white/20 rounded-full transition-colors text-white"
               >
                 <Minimize2 size={15} />
               </button>
               <button
-                onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(false);
+                }}
                 className="p-1.5 hover:bg-white/20 rounded-full transition-colors text-white"
               >
                 <X size={15} />
@@ -120,10 +200,18 @@ export default function TeesBot() {
               {/* Messages */}
               <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50/50">
                 {messages.map((msg, i) => (
-                  <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div
+                    key={i}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                  >
                     {msg.role === "assistant" && (
-                      <div className="w-7 h-7 rounded-full flex-shrink-0 mr-2 mt-0.5 flex items-center justify-center"
-                        style={{ background: "linear-gradient(135deg, #0f1f1a, #29bc89)" }}>
+                      <div
+                        className="w-7 h-7 rounded-full flex-shrink-0 mr-2 mt-0.5 flex items-center justify-center"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #0f1f1a, #29bc89)",
+                        }}
+                      >
                         <img src="/logo.svg" alt="" className="w-4 h-4" />
                       </div>
                     )}
@@ -133,7 +221,14 @@ export default function TeesBot() {
                           ? "text-white rounded-br-sm"
                           : "bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-sm"
                       }`}
-                      style={msg.role === "user" ? { background: "linear-gradient(135deg, #1a3d2b, #29bc89)" } : {}}
+                      style={
+                        msg.role === "user"
+                          ? {
+                              background:
+                                "linear-gradient(135deg, #1a3d2b, #29bc89)",
+                            }
+                          : {}
+                      }
                     >
                       {msg.content}
                     </div>
@@ -142,15 +237,28 @@ export default function TeesBot() {
 
                 {isLoading && (
                   <div className="flex justify-start">
-                    <div className="w-7 h-7 rounded-full flex-shrink-0 mr-2 flex items-center justify-center"
-                      style={{ background: "linear-gradient(135deg, #0f1f1a, #29bc89)" }}>
+                    <div
+                      className="w-7 h-7 rounded-full flex-shrink-0 mr-2 flex items-center justify-center"
+                      style={{
+                        background: "linear-gradient(135deg, #0f1f1a, #29bc89)",
+                      }}
+                    >
                       <img src="/logo.svg" alt="" className="w-4 h-4" />
                     </div>
                     <div className="bg-white border border-gray-100 shadow-sm px-4 py-3 rounded-2xl rounded-bl-sm">
                       <div className="flex gap-1.5 items-center">
-                        <span className="w-2 h-2 bg-[#29bc89] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                        <span className="w-2 h-2 bg-[#29bc89] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                        <span className="w-2 h-2 bg-[#29bc89] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                        <span
+                          className="w-2 h-2 bg-[#29bc89] rounded-full animate-bounce"
+                          style={{ animationDelay: "0ms" }}
+                        />
+                        <span
+                          className="w-2 h-2 bg-[#29bc89] rounded-full animate-bounce"
+                          style={{ animationDelay: "150ms" }}
+                        />
+                        <span
+                          className="w-2 h-2 bg-[#29bc89] rounded-full animate-bounce"
+                          style={{ animationDelay: "300ms" }}
+                        />
                       </div>
                     </div>
                   </div>
@@ -190,12 +298,16 @@ export default function TeesBot() {
                     onClick={() => sendMessage()}
                     disabled={!input.trim() || isLoading}
                     className="w-8 h-8 rounded-full flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                    style={{ background: "linear-gradient(135deg, #1a3d2b, #29bc89)" }}
+                    style={{
+                      background: "linear-gradient(135deg, #1a3d2b, #29bc89)",
+                    }}
                   >
                     <Send size={14} className="text-white translate-x-0.5" />
                   </button>
                 </div>
-                <p className="text-center text-[10px] text-gray-400 mt-1.5">Powered by TeesforTeens AI</p>
+                <p className="text-center text-[10px] text-gray-400 mt-1.5">
+                  Powered by TeesforTeens AI
+                </p>
               </div>
             </>
           )}
@@ -208,14 +320,21 @@ export default function TeesBot() {
         {showBubble && !isOpen && (
           <div className="bg-white shadow-lg border border-gray-100 rounded-2xl rounded-br-sm px-4 py-2.5 text-sm font-medium text-gray-800 animate-bounce-once max-w-[200px] text-right">
             👋 Need help shopping?
-            <button onClick={() => setShowBubble(false)} className="ml-2 text-gray-400 hover:text-gray-600">
+            <button
+              onClick={() => setShowBubble(false)}
+              className="ml-2 text-gray-400 hover:text-gray-600"
+            >
               <X size={12} className="inline" />
             </button>
           </div>
         )}
 
         <button
-          onClick={() => { setIsOpen(!isOpen); setShowBubble(false); setIsMinimized(false); }}
+          onClick={() => {
+            setIsOpen(!isOpen);
+            setShowBubble(false);
+            setIsMinimized(false);
+          }}
           className="w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95"
           style={{ background: "linear-gradient(135deg, #0f1f1a, #29bc89)" }}
         >
