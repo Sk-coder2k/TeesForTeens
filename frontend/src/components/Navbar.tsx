@@ -70,61 +70,61 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="font-extrabold text-[1.4rem] tracking-tight text-[#29bc89]">
+              <span className="font-extrabold text-lg lg:text-[1.4rem] tracking-tight text-[#29bc89]">
                 TeesforTeens
               </span>
             </Link>
           </div>
 
           {/* Main Nav Links (Center) */}
-          <div className="hidden md:flex items-center justify-center space-x-8 absolute left-1/2 -translate-x-1/2">
+          <div className="hidden md:flex items-center justify-center space-x-4 lg:space-x-8 absolute left-1/2 -translate-x-1/2">
             <Link
               href="/"
-              className="text-gray-500 hover:text-gray-900 text-sm font-bold transition-colors"
+              className="text-gray-500 hover:text-gray-900 text-xs lg:text-sm font-bold transition-colors whitespace-nowrap"
             >
               Home
             </Link>
             <Link
               href="/shop"
-              className="text-gray-500 hover:text-gray-900 text-sm font-bold transition-colors"
+              className="text-gray-500 hover:text-gray-900 text-xs lg:text-sm font-bold transition-colors whitespace-nowrap"
             >
               Shop
             </Link>
             <Link
               href="/shop?category=Oversized"
-              className="text-gray-500 hover:text-gray-900 text-sm font-bold transition-colors"
+              className="text-gray-500 hover:text-gray-900 text-xs lg:text-sm font-bold transition-colors whitespace-nowrap"
             >
               Oversized
             </Link>
             <Link
               href="/shop?category=Streetwear"
-              className="text-gray-500 hover:text-gray-900 text-sm font-bold transition-colors"
+              className="text-gray-500 hover:text-gray-900 text-xs lg:text-sm font-bold transition-colors whitespace-nowrap"
             >
               Streetwear
             </Link>
             <Link
               href="/shop?category=Couple"
-              className="text-gray-500 hover:text-gray-900 text-sm font-bold transition-colors"
+              className="text-gray-500 hover:text-gray-900 text-xs lg:text-sm font-bold transition-colors whitespace-nowrap"
             >
               Couple Tees
             </Link>
           </div>
 
           {/* Right Icons */}
-          <div className="flex items-center space-x-5">
+          <div className="flex items-center space-x-4 sm:space-x-5">
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className="text-gray-600 hover:text-gray-900 transition-colors"
             >
-              <Search className="h-5 w-5" strokeWidth={2} />
+              <Search className="h-5 w-5 sm:h-5 sm:w-5" strokeWidth={2} />
             </button>
             <Link
               href="/wishlist"
               className="text-gray-600 hover:text-gray-900 transition-colors relative"
             >
-              <Heart className="h-5 w-5" strokeWidth={2} />
+              <Heart className="h-5 w-5 sm:h-5 sm:w-5" strokeWidth={2} />
               {wishlistCount > 0 && (
-                <span className="absolute -top-1.5 -right-2 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white bg-[#FF6B6B] rounded-full">
+                <span className="absolute -top-1.5 -right-2 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold leading-none text-white bg-[#FF6B6B] rounded-full">
                   {wishlistCount}
                 </span>
               )}
@@ -133,9 +133,9 @@ export default function Navbar() {
               href="/cart"
               className="text-gray-600 hover:text-gray-900 transition-colors relative"
             >
-              <ShoppingCart className="h-5 w-5" strokeWidth={2} />
+              <ShoppingCart className="h-5 w-5 sm:h-5 sm:w-5" strokeWidth={2} />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-2 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white bg-[#FF6B6B] rounded-full">
+                <span className="absolute -top-1.5 -right-2 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold leading-none text-white bg-[#FF6B6B] rounded-full">
                   {cartCount}
                 </span>
               )}
