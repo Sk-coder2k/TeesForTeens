@@ -112,17 +112,13 @@ export const getUsers = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-
-    if (user) {
-      if (user.role === 'admin') {
-        res.status(400);
-        return res.json({ message: 'Cannot delete admin user' });
-      }
-      await user.deleteOne();
-      res.json({ message: 'User removed' });
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    // Prevent deleting yourself
+    if (user._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({ message: 'Cannot delete your own account' });
     }
+    await user.deleteOne();
+    res.json({ message: 'User removed' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

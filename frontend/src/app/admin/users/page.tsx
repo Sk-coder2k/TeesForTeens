@@ -72,15 +72,13 @@ export default function AdminUsersPage() {
                   <td className="px-6 py-4">{user.joined}</td>
                   <td className="px-6 py-4 font-bold text-gray-900">{user.orders}</td>
                   <td className="px-6 py-4 text-right">
-                    {user.role !== 'Admin' && (
-                      <button 
-                        onClick={() => deleteUser(user.id)}
-                        className="p-1.5 text-gray-400 hover:text-red-600 transition-colors"
-                        title="Delete User"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    )}
+                    <button 
+                      onClick={() => { if (confirm('Delete this user permanently?')) deleteUser(user.id); }}
+                      className="p-1.5 text-gray-400 hover:text-red-600 transition-colors"
+                      title="Delete User"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </td>
                 </tr>
               ))}
