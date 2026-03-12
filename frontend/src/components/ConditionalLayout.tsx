@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import TeesBot from "@/components/TeesBot";
 import Footer from "@/components/Footer";
 
 export default function ConditionalLayout({ children }: { children: React.ReactNode }) {
@@ -18,7 +17,6 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
       <Navbar />
       <main className="flex-grow">{children}</main>
       <Footer />
-      <TeesBot />
     </>
   );
 }
