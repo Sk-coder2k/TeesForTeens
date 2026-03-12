@@ -22,6 +22,7 @@ import couponRoutes from './routes/couponRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import homepageRoutes from './routes/homepageRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
 
 // Basic Route for testing
 app.get('/', (req, res) => {
@@ -37,6 +38,7 @@ app.use('/api/coupons', couponRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/homepage', homepageRoutes);
+app.use('/api/chat', chatRoutes);
 
 const PORT = process.env.PORT || 5000;
 
