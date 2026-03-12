@@ -1,6 +1,7 @@
 "use client";
 
 import { use, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Star, ShoppingBag, Heart, Share2, Shield, Truck, RotateCcw, ChevronRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
@@ -63,8 +64,22 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { success } = useToast();
+  const router = useRouter();
 
   const isWished = isInWishlist(PRODUCT.id);
+
+  const handleBuyNow = () => {
+    addToCart({
+      id: PRODUCT.id,
+      name: PRODUCT.name,
+      price: Number(PRODUCT.price),
+      quantity: quantity,
+      size: selectedSize,
+      color: selectedColor,
+      image: PRODUCT.images?.[0] || "",
+    });
+    router.push("/checkout");
+  };
 
   const handleAddToCart = () => {
     addToCart({
@@ -238,14 +253,23 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 mb-10 text-gray-900">
-              <button 
-                onClick={handleAddToCart}
-                className="flex-1 bg-mint-500 hover:bg-mint-600 text-white h-12 sm:h-14 rounded-xl font-bold text-base sm:text-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
-              >
-                <ShoppingBag className="w-5 h-5" />
-                Add to Cart
-              </button>
+            <div className="flex flex-col gap-3 mb-10">
+              <div className="flex gap-3">
+                <button
+                  onClick={handleBuyNow}
+                  className="flex-1 text-white h-12 sm:h-14 rounded-xl font-bold text-base sm:text-lg flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
+                  style={{ background: "linear-gradient(135deg, #0f1f1a, #29bc89)" }}
+                >
+                  ⚡ Buy Now
+                </button>
+                <button 
+                  onClick={handleAddToCart}
+                  className="flex-1 bg-white border-2 border-[#29bc89] text-[#29bc89] hover:bg-[#29bc89] hover:text-white h-12 sm:h-14 rounded-xl font-bold text-base sm:text-lg flex items-center justify-center gap-2 transition-colors"
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  Add to Cart
+                </button>
+              </div>
               
               <button 
                 onClick={toggleWishlist}
@@ -256,6 +280,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                   strokeWidth={isWished ? 0 : 2} 
                 />
               </button>
+              </div>
             </div>
 
             {/* Extra Info Grid */}

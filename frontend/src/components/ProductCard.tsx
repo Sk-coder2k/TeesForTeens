@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { Star, ShoppingBag, Heart } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Star, ShoppingBag, Heart, Zap } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 
 export function ProductCard({ item, i }: { item: any; i?: number }) {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const router = useRouter();
 
   const isWished = isInWishlist(item.id || item.name);
 
@@ -19,6 +21,21 @@ export function ProductCard({ item, i }: { item: any; i?: number }) {
   const stock = Number(item.stock) || 0;
   const isLimitedStock = stock > 0 && stock <= 10;
   const isOutOfStock = stock === 0;
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart({
+      id: item.id || item.name,
+      name: item.name,
+      price: parseInt(item.price),
+      quantity: 1,
+      size: "L",
+      color: "Default",
+      image: item.images?.[0] || "",
+    });
+    router.push("/checkout");
+  };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -134,6 +151,16 @@ export function ProductCard({ item, i }: { item: any; i?: number }) {
             )}
           </div>
         </div>
+        {!isOutOfStock && (
+          <button
+            onClick={handleBuyNow}
+            className="mt-2 w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-95"
+            style={{ background: "linear-gradient(135deg, #1a3d2b, #29bc89)" }}
+          >
+            <Zap className="h-3 w-3" fill="white" />
+            Buy Now
+          </button>
+        )}
       </div>
     </Link>
   );
