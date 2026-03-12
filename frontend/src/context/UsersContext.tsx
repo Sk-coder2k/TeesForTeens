@@ -54,7 +54,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
         email: u.email,
         role: u.isAdmin ? "Admin" : "Customer",
         joined: new Date(u.createdAt).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }),
-        orders: 0 // Would require aggregation or lookup in backend for real numbers
+        orders: u.orderCount || 0
       }));
       setUsers(normalizedUsers);
     } catch (err) {

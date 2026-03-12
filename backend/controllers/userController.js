@@ -85,7 +85,22 @@ export const changePassword = async (req, res) => {
 export const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
-    res.json(users);
+
+    // Get order counts for all users in one query
+    const orderCounts = await Order.aggregate([
+      { $group: { _id: '$user', count: { $sum: 1 } } }
+    ]);
+    const orderCountMap = {};
+    orderCounts.forEach(({ _id, count }) => {
+      orderCountMap[_id?.toString()] = count;
+    });
+
+    const usersWithOrders = users.map(u => ({
+      ...u.toObject(),
+      orderCount: orderCountMap[u._id.toString()] || 0
+    }));
+
+    res.json(usersWithOrders);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
