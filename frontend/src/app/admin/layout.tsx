@@ -161,12 +161,14 @@ export default function AdminLayout({
           >
             View Store ↗
           </a>
-          <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="lg:hidden p-1 text-gray-400 hover:text-gray-900 shrink-0"
-          >
-            <X size={18} />
-          </button>
+          {isSidebarOpen && (
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="lg:hidden p-1 text-gray-400 hover:text-gray-900 shrink-0"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
         <div className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
           {NAV_LINKS.map((link) => {
