@@ -1,12 +1,30 @@
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 import User from '../models/User.js';
-import nodemailer from 'nodemailer';
 
-const createTransporter = () => nodemailer.createTransport({
-  service: 'gmail',
-  auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-});
+const sendViaResend = async ({ to, subject, html }) => {
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'TeesforTeens <onboarding@resend.dev>',
+        to: [to],
+        subject,
+        html,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(err);
+    }
+  } catch (err) {
+    console.error('Resend error:', err.message);
+  }
+};
 
 const STATUS_CONFIG = {
   Processing: {
@@ -115,9 +133,7 @@ const sendOrderStatusEmail = async (order, customerEmail, customerName, newStatu
   `;
 
   try {
-    const transporter = createTransporter();
-    await transporter.sendMail({
-      from: `"TeesforTeens" <${process.env.EMAIL_USER}>`,
+    await sendViaResend({
       to: customerEmail,
       subject: `${config.emoji} ${config.label} – Order #${order.displayId || order._id.toString().slice(-8).toUpperCase()}`,
       html,
