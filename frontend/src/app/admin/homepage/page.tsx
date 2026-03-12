@@ -50,10 +50,18 @@ export default function HomepageManager() {
       const url = URL.createObjectURL(file);
       img.onload = () => {
         const MAX = 800;
-        let w = img.width, h = img.height;
-        if (w > MAX) { h = (h * MAX) / w; w = MAX; }
-        if (h > MAX) { w = (w * MAX) / h; h = MAX; }
-        canvas.width = w; canvas.height = h;
+        let w = img.width,
+          h = img.height;
+        if (w > MAX) {
+          h = (h * MAX) / w;
+          w = MAX;
+        }
+        if (h > MAX) {
+          w = (w * MAX) / h;
+          h = MAX;
+        }
+        canvas.width = w;
+        canvas.height = h;
         ctx.drawImage(img, 0, 0, w, h);
         URL.revokeObjectURL(url);
         resolve(canvas.toDataURL("image/jpeg", 0.75));
@@ -187,18 +195,38 @@ export default function HomepageManager() {
                   {/* Existing images */}
                   {trendingForm.heroImages.length > 0 && (
                     <div className="grid grid-cols-2 gap-3 mb-3">
-                      {trendingForm.heroImages.map((img: string, idx: number) => (
-                        <div key={idx} className="relative h-28 rounded-xl overflow-hidden border border-gray-200 group">
-                          <img src={img} alt={`slide ${idx + 1}`} className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                            <span className="text-white text-xs font-bold bg-black/50 px-2 py-1 rounded-full">Slide {idx + 1}</span>
-                            <button
-                              onClick={() => setTrendingForm(p => ({ ...p, heroImages: p.heroImages.filter((_: string, i: number) => i !== idx) }))}
-                              className="text-white bg-red-500 hover:bg-red-600 text-xs font-bold px-2 py-1 rounded-full"
-                            >✕</button>
+                      {trendingForm.heroImages.map(
+                        (img: string, idx: number) => (
+                          <div
+                            key={idx}
+                            className="relative h-28 rounded-xl overflow-hidden border border-gray-200 group"
+                          >
+                            <img
+                              src={img}
+                              alt={`slide ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                              <span className="text-white text-xs font-bold bg-black/50 px-2 py-1 rounded-full">
+                                Slide {idx + 1}
+                              </span>
+                              <button
+                                onClick={() =>
+                                  setTrendingForm((p) => ({
+                                    ...p,
+                                    heroImages: p.heroImages.filter(
+                                      (_: string, i: number) => i !== idx,
+                                    ),
+                                  }))
+                                }
+                                className="text-white bg-red-500 hover:bg-red-600 text-xs font-bold px-2 py-1 rounded-full"
+                              >
+                                ✕
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ),
+                      )}
                     </div>
                   )}
 
@@ -206,7 +234,9 @@ export default function HomepageManager() {
                   <div className="space-y-2">
                     <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-[#29bc89] hover:bg-[#E8F5F2] transition-all">
                       <span className="text-2xl mb-1">📷</span>
-                      <span className="text-xs font-bold text-gray-500">Upload image to add slide</span>
+                      <span className="text-xs font-bold text-gray-500">
+                        Upload image to add slide
+                      </span>
                       <input
                         type="file"
                         accept="image/*"
@@ -223,12 +253,14 @@ export default function HomepageManager() {
                         }}
                       />
                     </label>
-                    <p className="text-xs text-gray-400 text-center">— or paste an image URL —</p>
+                    <p className="text-xs text-gray-400 text-center">
+                      — or paste an image URL —
+                    </p>
                     <div className="flex gap-2">
                       <input
                         type="text"
                         value={newHeroUrl}
-                        onChange={e => setNewHeroUrl(e.target.value)}
+                        onChange={(e) => setNewHeroUrl(e.target.value)}
                         placeholder="https://example.com/image.jpg"
                         className={inputClass + " flex-1"}
                       />
@@ -236,7 +268,10 @@ export default function HomepageManager() {
                         type="button"
                         onClick={() => {
                           if (!newHeroUrl.trim()) return;
-                          setTrendingForm(p => ({ ...p, heroImages: [...p.heroImages, newHeroUrl.trim()] }));
+                          setTrendingForm((p) => ({
+                            ...p,
+                            heroImages: [...p.heroImages, newHeroUrl.trim()],
+                          }));
                           setNewHeroUrl("");
                         }}
                         className="px-4 py-2 bg-[#29bc89] text-white text-sm font-bold rounded-lg hover:bg-[#23a172] transition-colors whitespace-nowrap"
@@ -370,15 +405,45 @@ export default function HomepageManager() {
                     }
                     className={gridInputClass}
                   />
-                  <input
-                    type="text"
-                    placeholder="Image URL"
-                    value={newCat.image}
-                    onChange={(e) =>
-                      setNewCat((p) => ({ ...p, image: e.target.value }))
-                    }
-                    className={gridInputClass}
-                  />
+                  <div className="relative">
+                    {newCat.image ? (
+                      <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2 bg-gray-50">
+                        <img
+                          src={newCat.image}
+                          className="w-8 h-8 rounded-lg object-cover"
+                        />
+                        <span className="text-xs text-gray-500 flex-1 truncate">
+                          Image selected
+                        </span>
+                        <button
+                          onClick={() =>
+                            setNewCat((p) => ({ ...p, image: "" }))
+                          }
+                          className="text-red-400 hover:text-red-600 text-xs font-bold"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="flex items-center gap-2 border border-dashed border-gray-300 rounded-xl px-3 py-2 cursor-pointer hover:border-[#29bc89] hover:bg-green-50 transition-colors">
+                        <span className="text-lg">📁</span>
+                        <span className="text-xs text-gray-500 font-medium">
+                          Upload image from device
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            const compressed = await compressImage(file);
+                            setNewCat((p) => ({ ...p, image: compressed }));
+                          }}
+                        />
+                      </label>
+                    )}
+                  </div>
                 </div>
                 <button
                   onClick={handleAddCategory}
