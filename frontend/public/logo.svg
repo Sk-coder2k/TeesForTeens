@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 140" width="400" height="140">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F5C842;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#E8A500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C8860A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2DD4A0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A9E72;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000022"/>
+    </filter>
+  </defs>
+
+  <!-- Icon: Elegant T-shirt shape inside a diamond/shield -->
+  <g transform="translate(20, 10)" filter="url(#shadow)">
+    <!-- Outer shield -->
+    <path d="M60 4 L108 20 L108 70 Q108 110 60 128 Q12 110 12 70 L12 20 Z" 
+          fill="url(#greenGrad)" />
+    <!-- Gold inner border -->
+    <path d="M60 12 L100 26 L100 70 Q100 104 60 120 Q20 104 20 70 L20 26 Z" 
+          fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
+    <!-- T-shirt icon -->
+    <g transform="translate(60, 66)" fill="white">
+      <!-- Collar -->
+      <path d="M0 -32 C-4 -26 -8 -24 -14 -24 L-26 -18 L-20 -6 L-14 -10 L-14 24 L14 24 L14 -10 L20 -6 L26 -18 L14 -24 C8 -24 4 -26 0 -32Z" 
+            fill="white" opacity="0.95"/>
+      <!-- Gold collar accent -->
+      <path d="M0 -32 C-4 -26 -8 -24 -14 -24" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M0 -32 C4 -26 8 -24 14 -24" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+    <!-- Gold crown above shirt -->
+    <g transform="translate(60, 28)" fill="url(#goldGrad)">
+      <polygon points="0,-10 -12,2 -8,2 -8,10 8,10 8,2 12,2" />
+      <circle cx="-8" cy="-10" r="2.5"/>
+      <circle cx="0" cy="-13" r="2.5"/>
+      <circle cx="8" cy="-10" r="2.5"/>
+    </g>
+  </g>
+
+  <!-- Text: TeesforTeens -->
+  <g transform="translate(135, 48)">
+    <!-- "Tees" -->
+    <text font-family="Georgia, 'Times New Roman', serif" font-size="38" font-weight="bold" 
+          fill="url(#greenGrad)" letter-spacing="-0.5">Tees</text>
+    <!-- "for" smaller -->
+    <text x="98" y="-4" font-family="Georgia, 'Times New Roman', serif" font-size="18" 
+          fill="url(#goldGrad)" font-style="italic" letter-spacing="1">for</text>
+    <!-- "Teens" -->
+    <text y="36" font-family="Georgia, 'Times New Roman', serif" font-size="38" font-weight="bold" 
+          fill="#1a1a1a" letter-spacing="-0.5">Teens</text>
+    <!-- Gold underline accent -->
+    <line x1="0" y1="44" x2="240" y2="44" stroke="url(#goldGrad)" stroke-width="2"/>
+    <!-- Tagline -->
+    <text x="120" y="62" font-family="Georgia, 'Times New Roman', serif" font-size="11" 
+          fill="#888" letter-spacing="3" text-anchor="middle" font-style="italic">STYLE FOR THE GENERATION</text>
+  </g>
+</svg>
