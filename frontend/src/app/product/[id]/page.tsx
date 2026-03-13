@@ -506,6 +506,26 @@ export default function ProductDetail({
                         </p>
                       </div>
                     </div>
+
+                    {/* Admin Reply */}
+                    {review.adminReply && (
+                      <div className="mt-4 bg-mint-50 border border-mint-100 rounded-xl p-4">
+                        <p className="text-xs font-bold text-mint-700 mb-1 flex items-center gap-1">
+                          ✅ TeesforTeens replied
+                          {review.adminRepliedAt && (
+                            <span className="font-normal text-mint-500 ml-1">
+                              ·{" "}
+                              {new Date(
+                                review.adminRepliedAt,
+                              ).toLocaleDateString("en-IN")}
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-sm text-gray-700">
+                          {review.adminReply}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 );
               })}
