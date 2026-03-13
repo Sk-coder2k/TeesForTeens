@@ -9,6 +9,7 @@ import {
   ShoppingCart,
   Users,
   Tag,
+  Star,
   LogOut,
   Bell,
   X,
@@ -111,6 +112,7 @@ export default function AdminLayout({
       href: "/admin/homepage",
       icon: <LayoutGrid size={20} />,
     },
+    { title: "Reviews", href: "/admin/reviews", icon: <Star size={20} /> },
   ];
 
   // Auth guard — only block if we're on an admin route and not verified yet
