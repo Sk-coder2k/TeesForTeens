@@ -287,6 +287,14 @@ export const addOrderItems = async (req, res) => {
       totalPrice,
     });
     const createdOrder = await order.save();
+
+    // Reduce stock for each ordered item
+    for (const item of orderItems) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: -(item.qty || item.quantity || 1) },
+      });
+    }
+
     res.status(201).json(createdOrder);
   } catch (error) {
     res.status(500).json({ message: error.message });
