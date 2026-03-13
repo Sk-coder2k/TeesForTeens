@@ -19,7 +19,7 @@ import {
   RefreshCw,
   Download,
   X,
-, XCircle } from "lucide-react";
+XCircle } from "lucide-react";
 
 interface MonthlyData {
   month: string;
