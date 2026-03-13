@@ -90,8 +90,7 @@ export default function CheckoutPage() {
       } catch (e) {}
     };
     if (user) fetchProfile();
-    else
-      setFormData((prev) => ({ ...prev, email: (user as any)?.email || "" }));
+    else setFormData((prev) => ({ ...prev, email: user?.email || "" }));
   }, [user]);
 
   const subtotal = cartItems.reduce(
@@ -456,8 +455,8 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors"
-                      placeholder="you@example.com"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors text-gray-900 placeholder-gray-400"
+                      placeholder="Email address"
                     />
                   </div>
                   <div>
@@ -471,8 +470,8 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, firstName: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors"
-                      placeholder="Rahul"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors text-gray-900 placeholder-gray-400"
+                      placeholder="First name"
                     />
                   </div>
                   <div>
@@ -486,8 +485,8 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, lastName: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors"
-                      placeholder="Sharma"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors text-gray-900 placeholder-gray-400"
+                      placeholder="Last name"
                     />
                   </div>
                   <div className="col-span-1 md:col-span-2">
@@ -501,8 +500,8 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors"
-                      placeholder="+91 98765 43210"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors text-gray-900 placeholder-gray-400"
+                      placeholder="Phone number"
                     />
                   </div>
                 </div>
@@ -536,7 +535,7 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, address: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors text-gray-900 placeholder-gray-400"
                       placeholder="123 Main St, Apt 4B"
                     />
                   </div>
@@ -551,8 +550,8 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, city: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors"
-                      placeholder="Mumbai"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors text-gray-900 placeholder-gray-400"
+                      placeholder="City"
                     />
                   </div>
                   <div>
@@ -566,8 +565,8 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, state: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors"
-                      placeholder="Maharashtra"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors text-gray-900 placeholder-gray-400"
+                      placeholder="State"
                     />
                   </div>
                   <div>
@@ -581,8 +580,8 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, pincode: e.target.value })
                       }
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors"
-                      placeholder="400001"
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-mint-500 focus:border-mint-500 transition-colors text-gray-900 placeholder-gray-400"
+                      placeholder="PIN code"
                     />
                   </div>
                   <div>
@@ -765,7 +764,7 @@ export default function CheckoutPage() {
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded-md bg-gray-100 border border-gray-200"
                       />
-                      <span className="absolute -top-2 -right-2 w-5 h-5 bg-gray-900 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                      <span className="absolute -top-2 -right-2 min-w-[22px] h-[22px] px-1 bg-gray-900 text-white text-xs font-bold rounded-full flex items-center justify-center">
                         {item.quantity}
                       </span>
                     </div>
