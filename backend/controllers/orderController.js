@@ -357,6 +357,26 @@ export const updateOrderStatus = async (req, res) => {
       order.deliveredAt = Date.now();
     }
 
+    // Restore stock if order is cancelled (and wasn't already cancelled)
+    if (newStatus === "Cancelled" && prevStatus !== "Cancelled") {
+      for (const item of order.orderItems) {
+        const product = await Product.findById(item.product);
+        if (product) {
+          const newStock = product.stock + (item.qty || item.quantity || 1);
+          const newStatus2 =
+            newStock <= 0
+              ? "Out of Stock"
+              : newStock <= 10
+                ? "Low Stock"
+                : "Active";
+          await Product.findByIdAndUpdate(item.product, {
+            stock: newStock,
+            status: newStatus2,
+          });
+        }
+      }
+    }
+
     const updatedOrder = await order.save();
 
     // Send email if status actually changed
