@@ -19,7 +19,7 @@ import {
   RefreshCw,
   Download,
   X,
-XCircle } from "lucide-react";
+} from "lucide-react";
 
 interface MonthlyData {
   month: string;
@@ -167,16 +167,6 @@ export default function AdminDashboard() {
             />
           ))}
         </div>
-
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-red-100 mt-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="bg-red-500 p-3 rounded-xl"><XCircle size={24} className="text-white" /></div>
-          </div>
-          <p className="text-sm font-medium text-gray-500">Cancelled Orders</p>
-          <p className="text-3xl font-extrabold text-gray-900 mt-1">{(stats?.cancelledOrders || 0).toLocaleString("en-IN")}</p>
-          <p className="text-xs font-medium text-red-500 mt-1">Rs {(stats?.cancelledRevenue || 0).toLocaleString("en-IN")} lost</p>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-200 h-80" />
           <div className="bg-white rounded-2xl border border-gray-200 h-80" />
@@ -241,8 +231,8 @@ export default function AdminDashboard() {
 
   const cancelledCard = {
     title: "Cancelled Orders",
-    value: (stats?.cancelledOrders || 0).toLocaleString("en-IN"),
-    sub: `₹${(stats?.cancelledRevenue || 0).toLocaleString("en-IN")} lost`,
+    value: (stats.cancelledOrders || 0).toLocaleString("en-IN"),
+    sub: `₹${(stats.cancelledRevenue || 0).toLocaleString("en-IN")} lost`,
     icon: <XCircle size={24} className="text-white" />,
     color: "bg-red-500",
   };
@@ -355,6 +345,22 @@ export default function AdminDashboard() {
             </div>
           </div>
         ))}
+
+        {/* Cancelled Orders Card */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-red-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="bg-red-500 p-3 rounded-xl">
+              <XCircle size={24} className="text-white" />
+            </div>
+          </div>
+          <p className="text-sm font-medium text-gray-500">Cancelled Orders</p>
+          <p className="text-3xl font-extrabold text-gray-900 mt-1">
+            {(stats?.cancelledOrders || 0).toLocaleString("en-IN")}
+          </p>
+          <p className="text-xs font-medium text-red-500 mt-1">
+            ₹{(stats?.cancelledRevenue || 0).toLocaleString("en-IN")} lost
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
