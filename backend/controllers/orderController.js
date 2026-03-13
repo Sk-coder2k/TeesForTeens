@@ -172,10 +172,14 @@ export const getDashboardStats = async (req, res) => {
       User.countDocuments({ role: "customer" }),
     ]);
     const activeOrders = orders.filter((o) => !o.deletedByAdmin);
-    const totalRevenue = activeOrders.reduce(
+    const cancelledOrders = orders.filter((o) => o.orderStatus === "Cancelled");
+    const cancelledRevenue = cancelledOrders.reduce(
       (sum, o) => sum + (o.totalPrice || 0),
       0,
     );
+    const totalRevenue = activeOrders
+      .filter((o) => o.orderStatus !== "Cancelled")
+      .reduce((sum, o) => sum + (o.totalPrice || 0), 0);
     const recentOrders = await Order.find({ deletedByAdmin: { $ne: true } })
       .sort({ createdAt: -1 })
       .limit(5)
@@ -215,7 +219,7 @@ export const getDashboardStats = async (req, res) => {
         month: "short",
         year: "2-digit",
       });
-      monthlyData[key] = { revenue: 0, orders: 0, customers: 0 };
+      monthlyData[key] = { revenue: 0, orders: 0, customers: 0, cancelled: 0 };
     }
     activeOrders.forEach((o) => {
       const d = new Date(o.createdAt);
