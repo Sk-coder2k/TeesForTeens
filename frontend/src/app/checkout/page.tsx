@@ -90,7 +90,7 @@ export default function CheckoutPage() {
       } catch (e) {}
     };
     if (user) fetchProfile();
-    else setFormData((prev) => ({ ...prev, email: user?.email || "" }));
+    else setFormData((prev) => ({ ...prev, email: "" }));
   }, [user]);
 
   const subtotal = cartItems.reduce(
