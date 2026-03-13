@@ -288,11 +288,23 @@ export const addOrderItems = async (req, res) => {
     });
     const createdOrder = await order.save();
 
-    // Reduce stock for each ordered item
+    // Reduce stock for each ordered item and update status
     for (const item of orderItems) {
-      await Product.findByIdAndUpdate(item.product, {
-        $inc: { stock: -(item.qty || item.quantity || 1) },
-      });
+      const qty = item.qty || item.quantity || 1;
+      const product = await Product.findById(item.product);
+      if (product) {
+        const newStock = Math.max(0, product.stock - qty);
+        const newStatus =
+          newStock <= 0
+            ? "Out of Stock"
+            : newStock <= 10
+              ? "Low Stock"
+              : "Active";
+        await Product.findByIdAndUpdate(item.product, {
+          stock: newStock,
+          status: newStatus,
+        });
+      }
     }
 
     res.status(201).json(createdOrder);
