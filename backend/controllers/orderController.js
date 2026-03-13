@@ -351,6 +351,19 @@ export const updateOrderStatus = async (req, res) => {
     const newStatus = req.body.orderStatus || order.orderStatus;
     const prevStatus = order.orderStatus;
 
+    // Customers can only cancel their own orders
+    const isAdmin = req.user?.role === "admin";
+    if (!isAdmin) {
+      if (newStatus !== "Cancelled")
+        return res
+          .status(403)
+          .json({ message: "Customers can only cancel orders" });
+      if (order.user._id.toString() !== req.user._id.toString())
+        return res.status(403).json({ message: "Not authorized" });
+      if (["Shipped", "Delivered", "Cancelled"].includes(prevStatus))
+        return res.status(400).json({ message: "Cannot cancel this order" });
+    }
+
     order.orderStatus = newStatus;
     if (newStatus === "Delivered") {
       order.isDelivered = true;
