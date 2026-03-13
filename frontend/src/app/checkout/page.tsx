@@ -755,7 +755,10 @@ export default function CheckoutPage() {
                     key={item.id}
                     className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0"
                   >
-                    <div className="relative">
+                    <div
+                      className="relative flex-shrink-0"
+                      style={{ overflow: "visible" }}
+                    >
                       <img
                         src={
                           item.image ||
@@ -764,7 +767,7 @@ export default function CheckoutPage() {
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded-md bg-gray-100 border border-gray-200"
                       />
-                      <span className="absolute -top-2 -right-2 min-w-[22px] h-[22px] px-1 bg-gray-900 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                      <span className="absolute -bottom-2 -right-2 min-w-[22px] h-[22px] px-1 bg-gray-900 text-white text-xs font-bold rounded-full flex items-center justify-center z-10">
                         {item.quantity}
                       </span>
                     </div>
