@@ -749,7 +749,7 @@ export default function CheckoutPage() {
               </h2>
 
               {/* Dynamic Items Summary */}
-              <div className="max-h-60 overflow-y-auto mb-6 pr-2">
+              <div className="max-h-60 overflow-y-auto mb-6 pr-2 pt-3">
                 {cartItems.map((item) => (
                   <div
                     key={item.id}
@@ -767,7 +767,7 @@ export default function CheckoutPage() {
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded-md bg-gray-100 border border-gray-200"
                       />
-                      <span className="absolute -bottom-2 -right-2 min-w-[22px] h-[22px] px-1 bg-gray-900 text-white text-xs font-bold rounded-full flex items-center justify-center z-10">
+                      <span className="absolute -top-2 -right-2 min-w-[22px] h-[22px] px-1 bg-gray-900 text-white text-xs font-bold rounded-full flex items-center justify-center z-10">
                         {item.quantity}
                       </span>
                     </div>
