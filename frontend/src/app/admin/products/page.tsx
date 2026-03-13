@@ -14,8 +14,19 @@ import {
 import { useProducts } from "@/context/ProductsContext";
 
 export default function AdminProductsPage() {
-  const { products, isLoading, addProduct, updateProduct, deleteProduct } =
-    useProducts();
+  const {
+    products,
+    isLoading,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    refreshProducts,
+  } = useProducts();
+
+  // Always fetch fresh stock data when admin visits this page
+  useEffect(() => {
+    refreshProducts();
+  }, []);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
