@@ -30,10 +30,19 @@ export default function ProductDetail({
   const resolvedParams = use(params);
   const slug = resolvedParams.id;
 
-  const { products } = useProducts();
+  const { products, isLoading } = useProducts();
 
   // Find product by slug/id from the centralized context
   const foundProduct = products.find((p) => p.id === slug);
+
+  // Wait for products to load before showing 404
+  if (isLoading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-10 h-10 border-4 border-mint-500 border-t-transparent rounded-full" />
+      </div>
+    );
+
   if (!foundProduct) return notFound();
 
   const PRODUCT = {
@@ -177,34 +186,31 @@ export default function ProductDetail({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Image Gallery */}
           <div className="flex flex-col-reverse md:flex-row gap-4">
-            {/* Thumbnails */}
-            <div className="flex xl:flex-col gap-4 overflow-x-auto md:overflow-visible w-full md:w-24 flex-shrink-0">
-              {(PRODUCT.images && PRODUCT.images.length > 0
-                ? PRODUCT.images
-                : [
-                    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=600",
-                  ]
-              ).map((img: string, i: number) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveImage(i)}
-                  className={`relative aspect-[3/4] w-20 md:w-full rounded-lg overflow-hidden border-2 transition-all ${
-                    activeImage === i
-                      ? "border-mint-500"
-                      : "border-transparent hover:border-mint-300"
-                  }`}
-                >
-                  <img
-                    src={img}
-                    alt={`Thumbnail ${i + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
+            {/* Thumbnails - only show if more than 1 image */}
+            {PRODUCT.images && PRODUCT.images.length > 1 && (
+              <div className="flex xl:flex-col gap-4 overflow-x-auto md:overflow-visible w-full md:w-24 flex-shrink-0">
+                {PRODUCT.images.map((img: string, i: number) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImage(i)}
+                    className={`relative aspect-[3/4] w-20 md:w-full rounded-lg overflow-hidden border-2 transition-all ${
+                      activeImage === i
+                        ? "border-mint-500"
+                        : "border-transparent hover:border-mint-300"
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`Thumbnail ${i + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Main Image */}
-            <div className="relative w-full aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden cursor-zoom-in">
+            <div className="relative w-full aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden cursor-pointer">
               <img
                 src={
                   (PRODUCT.images && PRODUCT.images.length > 0
