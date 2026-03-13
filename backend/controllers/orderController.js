@@ -241,11 +241,19 @@ export const getDashboardStats = async (req, res) => {
       ([month, data]) => ({ month, ...data }),
     );
 
+    const cancelledOrders = orders.filter((o) => o.orderStatus === "Cancelled");
+    const cancelledRevenue = cancelledOrders.reduce(
+      (sum, o) => sum + (o.totalPrice || 0),
+      0,
+    );
+
     res.json({
       totalRevenue,
       totalOrders: activeOrders.length,
       totalProducts: products,
       totalCustomers: users,
+      cancelledOrders: cancelledOrders.length,
+      cancelledRevenue,
       monthlyChartData,
       recentOrders: recentOrders.map((o) => ({
         id: o._id,

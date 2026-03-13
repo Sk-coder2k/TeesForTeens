@@ -33,6 +33,8 @@ interface DashboardStats {
   totalOrders: number;
   totalProducts: number;
   totalCustomers: number;
+  cancelledOrders: number;
+  cancelledRevenue: number;
   monthlyChartData: MonthlyData[];
   recentOrders: {
     id: string;
@@ -157,7 +159,7 @@ export default function AdminDashboard() {
           <div className="h-8 w-56 bg-gray-200 rounded-lg" />
           <div className="h-9 w-36 bg-gray-200 rounded-lg" />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
@@ -226,6 +228,14 @@ export default function AdminDashboard() {
       chartKey: "customers" as const,
     },
   ];
+
+  const cancelledCard = {
+    title: "Cancelled Orders",
+    value: (stats.cancelledOrders || 0).toLocaleString("en-IN"),
+    sub: `₹${(stats.cancelledRevenue || 0).toLocaleString("en-IN")} lost`,
+    icon: <XCircle size={24} className="text-white" />,
+    color: "bg-red-500",
+  };
 
   return (
     <div className="space-y-6">
