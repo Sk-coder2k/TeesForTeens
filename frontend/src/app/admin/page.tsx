@@ -173,8 +173,8 @@ export default function AdminDashboard() {
             <div className="bg-red-500 p-3 rounded-xl"><XCircle size={24} className="text-white" /></div>
           </div>
           <p className="text-sm font-medium text-gray-500">Cancelled Orders</p>
-          <p className="text-3xl font-extrabold text-gray-900 mt-1">{(stats.cancelledOrders || 0).toLocaleString("en-IN")}</p>
-          <p className="text-xs font-medium text-red-500 mt-1">Rs {(stats.cancelledRevenue || 0).toLocaleString("en-IN")} lost</p>
+          <p className="text-3xl font-extrabold text-gray-900 mt-1">{(stats?.cancelledOrders || 0).toLocaleString("en-IN")}</p>
+          <p className="text-xs font-medium text-red-500 mt-1">Rs {(stats?.cancelledRevenue || 0).toLocaleString("en-IN")} lost</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -241,8 +241,8 @@ export default function AdminDashboard() {
 
   const cancelledCard = {
     title: "Cancelled Orders",
-    value: (stats.cancelledOrders || 0).toLocaleString("en-IN"),
-    sub: `₹${(stats.cancelledRevenue || 0).toLocaleString("en-IN")} lost`,
+    value: (stats?.cancelledOrders || 0).toLocaleString("en-IN"),
+    sub: `₹${(stats?.cancelledRevenue || 0).toLocaleString("en-IN")} lost`,
     icon: <XCircle size={24} className="text-white" />,
     color: "bg-red-500",
   };
