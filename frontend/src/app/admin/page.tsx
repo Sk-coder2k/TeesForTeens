@@ -19,7 +19,7 @@ import {
   RefreshCw,
   Download,
   X,
-XCircle } from "lucide-react";
+} from "lucide-react";
 
 interface MonthlyData {
   month: string;
@@ -91,7 +91,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeChart, setActiveChart] = useState<
-    "revenue" | "orders" | "customers" | "products" | null
+    "revenue" | "orders" | "customers" | "products" | "cancelled" | null
   >(null);
 
   const API_URL =
@@ -196,6 +196,11 @@ export default function AdminDashboard() {
     orders: { key: "orders", label: "Orders", color: "#3b82f6" },
     customers: { key: "customers", label: "Customers", color: "#f97316" },
     products: { key: "orders", label: "Orders", color: "#a855f7" },
+    cancelled: {
+      key: "cancelled",
+      label: "Cancelled Orders",
+      color: "#ef4444",
+    },
   };
 
   const STATS = [
@@ -251,8 +256,10 @@ export default function AdminDashboard() {
           >
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold text-gray-900">
-                {STATS.find((s) => s.chartKey === activeChart)?.title} — Last 6
-                Months
+                {activeChart === "cancelled"
+                  ? "Cancelled Orders"
+                  : STATS.find((s) => s.chartKey === activeChart)?.title}{" "}
+                — Last 6 Months
               </h3>
               <button
                 onClick={() => setActiveChart(null)}
@@ -347,7 +354,10 @@ export default function AdminDashboard() {
         ))}
 
         {/* Cancelled Orders Card */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-red-100">
+        <div
+          className="bg-white rounded-2xl p-6 shadow-sm border border-red-100 cursor-pointer hover:shadow-md transition-all hover:border-red-300"
+          onClick={() => setActiveChart("cancelled")}
+        >
           <div className="flex items-center justify-between mb-4">
             <div className="bg-red-500 p-3 rounded-xl">
               <XCircle size={24} className="text-white" />

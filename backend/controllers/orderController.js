@@ -228,6 +228,14 @@ export const getDashboardStats = async (req, res) => {
         monthlyData[key].orders += 1;
       }
     });
+    cancelledOrders.forEach((o) => {
+      const d = new Date(o.createdAt);
+      const key = d.toLocaleString("en-IN", {
+        month: "short",
+        year: "2-digit",
+      });
+      if (monthlyData[key]) monthlyData[key].cancelled += 1;
+    });
     const allUsers = await User.find({ role: "customer" }).select("createdAt");
     allUsers.forEach((u) => {
       const d = new Date(u.createdAt);
